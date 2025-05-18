@@ -5,7 +5,21 @@ from django_ratelimit.decorators import ratelimit
 import docker
 import re
 
-client = docker.from_env()
+# client = docker.from_env()
+import logging
+
+logger = logging.getLogger(__name__)
+
+try:
+    # Try to connect to Docker
+    client = docker.from_env()
+    # Test the connection
+    client.ping()
+except docker.errors.DockerException as e:
+    logger.error(f"Docker connection error: {str(e)}")
+    client = None
+
+
 
 
 def editor(request):
@@ -25,7 +39,7 @@ def execute_code(request):
         try:
             result = client.containers.run(
                 'python-sandbox',
-                command=f"python sanitized_runner.py",
+                command=f"python /sandbox/sanitized_runner.py",
                 environment={'PYTHON_CODE': code},
                 mem_limit='100m',
                 network_mode='none',

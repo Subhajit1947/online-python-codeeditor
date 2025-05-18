@@ -1,0 +1,41 @@
+
+
+services:
+  web:
+    build: .
+    command: gunicorn --bind 0.0.0.0:8000 editor.wsgi:application
+    volumes:
+      - .:/app:z
+      - ./static:/app/static
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "8000:8000"
+    depends_on:
+      - sandbox
+    # environment:
+    #   - DOCKER_HOST=unix:///var/run/docker.sock
+    networks:
+      - app_network
+
+  sandbox:
+    build: ./sandbox
+    image: python-sandbox
+    read_only: true
+    networks:
+      - app_network
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    tmpfs:
+      - /tmp
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 100M
+
+networks:
+  app_network:
+    driver: bridge
+

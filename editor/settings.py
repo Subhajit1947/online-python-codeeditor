@@ -12,9 +12,9 @@ STATIC_FILE_PATH=BASE_DIR/'static'
 SECRET_KEY = 'django-insecure-@7)bzxaq90exya5owsm+pm)t=_a=b-3v!)ddvf-bu0a#p0e^ih'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -106,6 +106,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT =BASE_DIR/'staticfiles'
 STATICFILES_DIRS=[
     STATIC_FILE_PATH
 ]
@@ -123,3 +124,8 @@ SESSION_COOKIE_SECURE = True
 # Rate limiting
 RATELIMIT_ENABLE = True
 RATELIMIT_VIEW = 'sandbox.views.execute_code'
+
+DOCKER_HOST = 'unix:///var/run/docker.sock'
+SANDBOX_IMAGE = 'python-sandbox'
+SANDBOX_MEM_LIMIT = '100m'
+SANDBOX_TIMEOUT = 5 
